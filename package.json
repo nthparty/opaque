@@ -1,0 +1,46 @@
+{
+  "name": "apake",
+  "version": "0.0.2",
+  "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nthparty/opaque.git#opaque"
+  },
+  "keywords": [
+    "asymmetric",
+    "password",
+    "authenticated",
+    "key-exchange",
+    "OPAQUE",
+    "aPAKE",
+    "PAKE",
+    "JavaScript",
+    "cryptography",
+    "cryptographic-library"
+  ],
+  "author": "Nth Party <info@nthparty.com>",
+  "contributors": [
+    {
+      "name": "Wyatt Howe",
+      "email": "whowe@bu.edu"
+    },
+    {
+      "name": "Andrei Lapets",
+      "email": "a@lapets.io",
+      "url": "https://lapets.io/"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nthparty/opaque/issues"
+  },
+  "homepage": "https://github.com/nthparty/opaque/tree/opaque#readme",
+  "dependencies": {
+    "libsodium-wrappers-sumo": "^0.7.6",
+    "oprf": "^2.0.0"
+  }
+}
