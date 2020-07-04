@@ -11,14 +11,14 @@ OPAQUE.then(function (OPAQUE) {
   /*
    *  Client
    */
-  const user_id = "newuser";
-  const password = "correct horse battery staple";
+  const user_id = 'newuser';
+  const password = 'correct horse battery staple';
 
   // Sign up
-  OPAQUE.client_register(password, user_id).then(console.log);
+  OPAQUE.client_register(password, user_id).then(console.log.bind(null, 'Registered:'));
 
   // Log in for the first time and receive a session token
-  OPAQUE.client_authenticate(password, user_id).then(console.log);
+  OPAQUE.client_authenticate(password, user_id).then(console.log.bind(null, 'Shared secret:'));
 
 
   /*
@@ -29,16 +29,15 @@ OPAQUE.then(function (OPAQUE) {
   // Register a new user
   OPAQUE.server_register().then(function (user) {
     database[user.id] = user.pepper;
-    // console.log(user);
 
     // Handle a login attempt
     let user_id = user.id;
     let pepper = database[user_id];
     OPAQUE.server_authenticate(user_id, pepper).then(function (token) {
       if (token == null) {
-        console.log("Incorrect username or password");
+        console.log('Incorrect username or password');
       } else {
-        console.log("Login for " + user_id + " succeded with resulting token: " + token);
+        console.log('Login for ' + user_id + ' succeeded with resulting token:', token);
       }
     });
   });
