@@ -1,6 +1,6 @@
 {
   "name": "apake",
-  "version": "0.0.2",
+  "version": "0.1.3",
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "index.js",
   "scripts": {
@@ -26,12 +26,13 @@
   "contributors": [
     {
       "name": "Wyatt Howe",
-      "email": "whowe@bu.edu"
+      "email": "wyatt@nthparty.com",
+      "url": "nthparty.com"
     },
     {
       "name": "Andrei Lapets",
-      "email": "a@lapets.io",
-      "url": "https://lapets.io/"
+      "email": "andrei@nthparty.com",
+      "url": "nthparty.com"
     }
   ],
   "license": "MIT",
