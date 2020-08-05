@@ -28,7 +28,7 @@ Implementation of [this Internet Draft proposal](https://datatracker.ietf.org/do
 You may also install this module from [npm](https://www.npmjs.com/).
 
 ```shell
-npm install apake
+npm install @nthparty/opaque
 ```
 
 ## Calling the API
@@ -37,7 +37,7 @@ The process generally works as follows:
 
 ```javascript
 // Each party includes the 1-out-of-n module with IO:
-const OT = require('apake')(IO);
+const OT = require('opaque')(IO);
 
 // Login credentials never reaches the server in plaintext
 const user_id = 'newuser';
@@ -46,7 +46,7 @@ const password = 'correct horse battery staple';
 // Sign up
 OPAQUE.client_register(password, user_id).then(console.log.bind(null, 'Registered:'));
 
-// Log in for the first time and receive a session token
+// Log in and receive a session token
 OPAQUE.client_authenticate(password, user_id).then(console.log.bind(null, 'Shared secret:'));
 
 // Register a new user
@@ -61,4 +61,4 @@ OPAQUE.server_authenticate(user.id, user.pepper);
 'Shared secret: 4ccdf3b8cacf08273a085c952aaf3ee83633e6afcedf4f86c00497e862f43c78'
 ```
 
-Please read [example.js](https://github.com/nthparty/opaque/blob/master/test/test.js) for a more detailed example or run it with `node test/test.js`.
+Please read [test.js](https://github.com/nthparty/opaque/blob/master/test/test.js) for a more detailed example or run it with `node test/test.js`.
