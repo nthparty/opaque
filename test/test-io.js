@@ -1,8 +1,8 @@
 /*
  *  Client-Server Communications
  */
-var listeners = {};
-var mailbox = {};
+const listeners = {};
+const mailbox = {};
 const dummy_socket = computation_id => ({
   get: function (op_id, tag) {
     return new Promise(function (resolve) {

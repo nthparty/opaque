@@ -4,7 +4,7 @@
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -43,5 +43,14 @@
   "dependencies": {
     "libsodium-wrappers-sumo": "^0.7.6",
     "oprf": "^2.0.0"
+  },
+  "devDependencies": {
+    "jest": "^26.2.2"
+  },
+  "jest": {
+    "collectCoverageFrom" : [
+      "lib/*.{js,jsx}",
+      "<rootDir>/test/{!(test-io),}.js"
+    ]
   }
 }
