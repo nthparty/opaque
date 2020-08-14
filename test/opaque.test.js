@@ -7,6 +7,14 @@ var IO = require('./test-io.js');
 const OPAQUE = require('../index.js')(IO);
 
 test('end-to-end working flow', done => {
+  workflow(true, done)
+})
+
+test('end-to-end wrong pass for client authenticate flow', done => {
+  workflow(false, done)
+})
+
+const workflow = (valid, done) => {
   OPAQUE.then(function (OPAQUE) {
 
     /*
@@ -14,12 +22,22 @@ test('end-to-end working flow', done => {
      */
     const user_id = 'newuser';
     const password = 'correct horse battery staple';
+    const wrongPass = 'correct horse battery staples';
 
     // Sign up
     OPAQUE.client_register(password, user_id).then(console.log.bind(null, 'Registered:'));
 
     // Log in for the first time and receive a session token
-    OPAQUE.client_authenticate(password, user_id).then(console.log.bind(null, 'Shared secret:'));
+    if (valid) {
+      OPAQUE.client_authenticate(password, user_id).then(() => {
+        valid && console.log.bind(null, 'Shared secret:');
+      });
+    } else {
+      OPAQUE.client_authenticate(wrongPass, user_id).then(() => {}, () => {
+        !valid && done();
+      });
+    }
+
 
     /*
      *  Server
@@ -27,21 +45,23 @@ test('end-to-end working flow', done => {
     const database = {};  // Test database to show what user data gets stored
 
     // Register a new user
-    OPAQUE.server_register().then(function (user) {
+    OPAQUE.server_register().then(user => {
       database[user.id] = user.pepper;
 
       // Handle a login attempt
       let user_id = user.id;
       let pepper = database[user_id];
-      OPAQUE.server_authenticate(user_id, pepper).then(function (token) {
+      OPAQUE.server_authenticate(user_id, pepper).then(token => {
         try {
-          expect(token).not.toBeNull();
+          valid && expect(token).not.toBeNull();
           done()
         } catch (error) {
           done(error);
         }
+      }, error => {
+        !valid && expect(error).toBeDefined();
       });
     });
 
   });
-})
+}
