@@ -1,4 +1,4 @@
-module.exports = function (io, sodium) {
+module.exports = (io, sodium) => {
   if (sodium == null) {
     sodium = require('libsodium-wrappers-sumo');
   }
@@ -7,9 +7,8 @@ module.exports = function (io, sodium) {
   const oprf = new OPRF(sodium);
   const opaque = require('./lib/opaque.js')(io, sodium, oprf);
 
-  return new Promise(function (resolve) {
-    oprf.ready.then(function () {
-      resolve(opaque);
-    });
+  return new Promise(async (resolve) => {
+    await oprf.ready;
+    resolve(opaque);
   });
 };
