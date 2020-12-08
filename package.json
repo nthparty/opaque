@@ -1,6 +1,6 @@
 {
   "name": "@nthparty/opaque",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "index.js",
   "scripts": {
@@ -40,7 +40,7 @@
   "bugs": {
     "url": "https://github.com/nthparty/opaque/issues"
   },
-  "homepage": "https://github.com/nthparty/opaque/tree/opaque#readme",
+  "homepage": "https://github.com/nthparty/opaque#readme",
   "dependencies": {
     "libsodium-wrappers-sumo": "^0.7.6",
     "oprf": "^2.0.0"
