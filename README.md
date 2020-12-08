@@ -25,10 +25,10 @@ Implementation of [this Internet Draft proposal](https://datatracker.ietf.org/do
 
 ## Installation
 
-You may also install this module from [npm](https://www.npmjs.com/).
+You may also install this module from [npm](https://www.npmjs.com/package/@nthparty/opaque).
 
 ```shell
-npm install apake
+npm install @nthparty/opaque
 ```
 
 ## Calling the API
@@ -37,7 +37,7 @@ The process generally works as follows:
 
 ```javascript
 // Each party includes the 1-out-of-n module with IO:
-const OT = require('apake')(IO);
+const OT = require('@nthparty/opaque')(IO);
 
 // Login credentials never reaches the server in plaintext
 const user_id = 'newuser';

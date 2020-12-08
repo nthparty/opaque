@@ -1,6 +1,6 @@
 {
-  "name": "apake",
-  "version": "0.1.3",
+  "name": "@nthparty/opaque",
+  "version": "0.2.0",
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "index.js",
   "scripts": {
