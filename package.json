@@ -1,6 +1,6 @@
 {
   "name": "@nthparty/opaque",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "index.js",
   "scripts": {
@@ -28,6 +28,11 @@
     {
       "name": "Wyatt Howe",
       "email": "wyatt@nthparty.com",
+      "url": "nthparty.com"
+    },
+    {
+      "name": "Frederick Jansen",
+      "email": "frederick@nthparty.com",
       "url": "nthparty.com"
     },
     {
