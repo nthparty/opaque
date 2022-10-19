@@ -1,13 +1,13 @@
-interface Opaque {
+export interface Opaque {
   /**
    * Sign up as a new user
    */
-  clientRegister: (password: string, user_id: string, op_id: string) => Promise<boolean>;
+  clientRegister: (password: string, user_id: string, op_id?: string) => Promise<boolean>;
 
   /**
    * Register a new user for the first time
    */
-  serverRegister: (t: number | undefined, op_id: string) => Promise<UserRecord>;
+  serverRegister: (t?: number, op_id?: string) => Promise<UserRecord>;
 
   /**
    * Try to log in
@@ -25,12 +25,12 @@ interface Opaque {
   serverAuthenticate: (user_id: string, pepper: Pepper, op_id?: string) => Promise<string>;
 }
 
-interface UserRecord {
+export interface UserRecord {
   id: string;
   pepper: Pepper;
 }
 
-interface Pepper {
+export interface Pepper {
   ks: Uint8Array;
   ps: Uint8Array;
   Ps: Uint8Array;
@@ -38,13 +38,13 @@ interface Pepper {
   c: C;
 }
 
-interface C {
+export interface C {
   pu: Ciphertext;
   Pu: Ciphertext;
   Ps: Ciphertext;
 }
 
-interface Ciphertext {
+export interface Ciphertext {
   mac_tag: Uint8Array;
   body: Uint8Array;
 }

@@ -1,4 +1,6 @@
-interface IOData {
+import type { C } from "./local";
+
+export interface IOData {
   sid: string;
   pw: Uint8Array;
   registered: boolean;
@@ -13,9 +15,10 @@ interface IOData {
   Au: Uint8Array;
 }
 
-type Tag = keyof IOData;
+export type Tag = keyof IOData;
+export type IOValue = IOData[Tag];
 
-interface IO {
+export interface IO {
   get: (op_id: string | undefined, tag: Tag) => Promise<IOData[typeof tag]>;
-  give: (op_id: string | undefined, tag: Tag, msg: IOData[typeof tag]) => string;
+  give: (op_id: string | undefined, tag: Tag, msg: IOData[typeof tag]) => void;
 }

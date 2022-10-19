@@ -1,9 +1,11 @@
+import type { IO, IOData, Tag } from "../types/io";
+import type { Opaque } from "../types/local";
 import type * as Sodium from "libsodium-wrappers-sumo";
 import type OPRF from "oprf";
-import utilFactory from "./util.js";
+import utilFactory from "./util";
 
 type BoundGet = <T extends Tag>(tag: T) => Promise<IOData[T]>;
-type BoundGive = <T extends Tag>(tag: T, msg: IOData[T]) => string;
+type BoundGive = <T extends Tag>(tag: T, msg: IOData[T]) => void;
 
 export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
   const util = utilFactory(sodium, oprf);

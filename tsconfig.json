@@ -1,25 +1,8 @@
 {
-  "compilerOptions": {
-    "target": "ES2021",
-    "lib": ["ES2021"],
-    "module": "CommonJS",
-    "moduleResolution": "node",
-    "useDefineForClassFields": true,
-    "esModuleInterop": true,
-    "declaration": true,
-    "removeComments": false,
-    "baseUrl": "./src",
-    "outDir": "./dist",
-    "isolatedModules": true,
-    "strict": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "noUncheckedIndexedAccess": true,
-    "useUnknownInCatchVariables": true,
-    "importsNotUsedAsValues": "error",
-    "skipLibCheck": false
-  },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["./test"]
+	"extends": "./tsconfig.base.json",
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.prod.json" },
+    { "path": "./tsconfig.test.json" },
+  ]
 }

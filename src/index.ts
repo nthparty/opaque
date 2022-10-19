@@ -1,5 +1,7 @@
+import type { IO } from "./types/io";
+import type { Opaque } from "./types/local";
 import OPRF from "oprf";
-import opaqueFactory from "./lib/opaque.js";
+import opaqueFactory from "./lib/opaque";
 
 export = async (io: IO): Promise<Opaque> => {
   // The original code passed in an instance of `libsodium-wrappers-sumo`

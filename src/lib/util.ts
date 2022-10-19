@@ -1,3 +1,4 @@
+import type { Ciphertext } from "../types/local";
 import type OPRF from "oprf";
 import type * as Sodium from "libsodium-wrappers-sumo";
 
