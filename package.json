@@ -1,7 +1,7 @@
 {
   "name": "@nthparty/opaque",
   "version": "0.3.0",
-  "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
+  "description": "TypeScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -22,6 +22,7 @@
     "aPAKE",
     "PAKE",
     "JavaScript",
+    "TypeScript",
     "cryptography",
     "cryptographic-library"
   ],
