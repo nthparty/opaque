@@ -4,7 +4,7 @@
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p tsconfig.prod.json",
     "test": "npm run build && jest --coverage",
     "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
