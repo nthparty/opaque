@@ -1,8 +1,10 @@
 {
 	"extends": "./tsconfig.base.json",
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.prod.json" },
-    { "path": "./tsconfig.test.json" },
-  ]
+  "compilerOptions": {
+    "noEmit": true,
+    "baseUrl": "./test",
+    "types": ["jest"],
+  },
+  "include": ["./src/**/*.ts", "./test/**/*.ts"],
+  "exclude": []
 }
