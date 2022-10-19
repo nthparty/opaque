@@ -72,7 +72,7 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
     const b = await get("beta");
 
     if (!sodium.crypto_core_ristretto255_is_valid_point(b)) {
-      console.log("client_authenticated_1 false " + user_id);
+      console.debug("client_authenticated_1 false " + user_id);
       give("client_authenticated", false);
       throw new Error("client_authenticated_1 false");
     }
@@ -83,7 +83,7 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
     const pu = util.sodiumAeadDecrypt(rw, c.pu);
 
     if (!sodium.crypto_core_ristretto255_is_valid_point(pu)) {
-      console.log("client_authenticated_2 false " + user_id);
+      console.debug("client_authenticated_2 false " + user_id);
       give("client_authenticated", false);
       throw new Error("client_authenticated_2 false");
     }
@@ -100,7 +100,7 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
 
     if (sodium.compare(As, __As) !== 0) {
       // The comparable value of 0 means As equals __As
-      console.log("client_authenticated_3 false " + user_id);
+      console.debug("client_authenticated_3 false " + user_id);
       give("client_authenticated", false);
       throw new Error("client_authenticated_3 false");
     }
@@ -112,7 +112,7 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
       const token = sodium.to_hex(SK);
       return token;
     } else {
-      console.log("client_authenticated_4 false " + user_id);
+      console.debug("client_authenticated_4 false " + user_id);
       give("client_authenticated", false);
       throw new Error("client_authenticated_4 false");
     }
@@ -126,7 +126,7 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
 
     const a = await get("alpha");
     if (!sodium.crypto_core_ristretto255_is_valid_point(a)) {
-      console.log("Authentication failed.  Alpha is not a group element.");
+      console.debug("Authentication failed.  Alpha is not a group element.");
       give("authenticated", false);
       throw new Error("Authentication failed.  Alpha is not a group element.");
     }
@@ -152,7 +152,7 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
       const token = sodium.to_hex(SK);
       return token;
     } else {
-      console.log("Authentication failed.  Wrong password for " + user_id);
+      console.debug("Authentication failed.  Wrong password for " + user_id);
       give("authenticated", false);
       throw new Error("Authentication failed.  Wrong password for " + user_id);
     }

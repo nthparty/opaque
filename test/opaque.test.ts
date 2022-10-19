@@ -27,12 +27,12 @@ const workflow = async (valid: boolean, done: (err?: unknown) => void): Promise<
   const wrongPass = 'correct horse battery staples';
 
   // Sign up
-  OPAQUE.clientRegister(password, user_id).then(console.log.bind(null, 'Registered:'));
+  OPAQUE.clientRegister(password, user_id).then(console.debug.bind(null, 'Registered:'));
 
   // Log in for the first time and receive a session token
   if (valid) {
     OPAQUE.clientAuthenticate(password, user_id).then(() => {
-      valid && console.log.bind(null, 'Shared secret:');
+      valid && console.debug.bind(null, 'Shared secret:');
     });
   } else {
     OPAQUE.clientAuthenticate(wrongPass, user_id).then(() => {
