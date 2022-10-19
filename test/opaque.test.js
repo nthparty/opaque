@@ -4,7 +4,7 @@
  *  Then the connection is reset, and the user attempts to log in.
  */
 const IO = require('./test-io.js');
-const _OPAQUE = require('../index.js')(IO);
+const _OPAQUE = require('../dist/index.js')(IO);
 
 test('end-to-end working flow', done => {
   workflow(true, done)
