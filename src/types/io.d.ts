@@ -19,6 +19,6 @@ export type Tag = keyof IOData;
 export type IOValue = IOData[Tag];
 
 export interface IO {
-  get: (op_id: string | undefined, tag: Tag) => Promise<IOData[typeof tag]>;
-  give: (op_id: string | undefined, tag: Tag, msg: IOData[typeof tag]) => void;
+  get: <T extends Tag>(op_id: string | undefined, tag: T) => Promise<IOData[T]>;
+  give: <T extends Tag>(op_id: string | undefined, tag: T, msg: IOData[T]) => void;
 }
