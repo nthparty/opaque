@@ -5,7 +5,7 @@
   "main": "./dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",
-    "test": "npm run build && jest --coverage",
+    "test": "jest --coverage",
     "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
   "repository": {
