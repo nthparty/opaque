@@ -3,6 +3,7 @@
   "version": "0.3.0",
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.prod.json && cp -r src/types dist/types",
     "test": "jest --coverage",
