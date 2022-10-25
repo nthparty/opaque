@@ -1,11 +1,12 @@
 {
   "name": "@nthparty/opaque",
-  "version": "0.3.0",
+  "version": "0.4.0-beta.1.0",
   "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
   "main": "index.js",
   "scripts": {
+    "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info",
     "test": "jest --coverage",
-    "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
+    "lint": "eslint lib"
   },
   "repository": {
     "type": "git",
@@ -47,11 +48,12 @@
   },
   "homepage": "https://github.com/nthparty/opaque#readme",
   "dependencies": {
-    "libsodium-wrappers-sumo": "^0.7.6",
+    "libsodium-wrappers-sumo": "0.7.8",
     "oprf": "^2.0.0"
   },
   "devDependencies": {
     "coveralls": "^3.1.0",
+    "eslint": "^8.24.0",
     "jest": "^26.2.2"
   },
   "jest": {
