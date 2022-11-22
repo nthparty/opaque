@@ -61,4 +61,4 @@ OPAQUE.server_authenticate(user.id, user.pepper);
 'Shared secret: 4ccdf3b8cacf08273a085c952aaf3ee83633e6afcedf4f86c00497e862f43c78'
 ```
 
-Please read [opaque.test.js](https://github.com/nthparty/opaque/blob/devel/test/opaque.test.js) for a more detailed example, and run `npm test` to test it (requires `npm ci -also=dev` first to install dependencies).
+Please read [opaque.test.ts](https://github.com/nthparty/opaque/blob/main/test/opaque.test.ts) for a more detailed example, and run `npm test` to test it (requires `npm ci -also=dev` first to install dependencies).
