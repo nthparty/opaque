@@ -1,5 +1,5 @@
 # OPAQUE.js
-JavaScript implementation of the OPAQUE asymmetric PAKE (aPAKE) protocol
+TypeScript implementation of the OPAQUE asymmetric PAKE (aPAKE) protocol
 
 ## Protocol
 Implementation of [this Internet Draft proposal](https://datatracker.ietf.org/doc/draft-krawczyk-cfrg-opaque).
@@ -44,10 +44,10 @@ const user_id = 'newuser';
 const password = 'correct horse battery staple';
 
 // Sign up
-OPAQUE.client_register(password, user_id).then(console.log.bind(null, 'Registered:'));
+OPAQUE.client_register(password, user_id).then(console.debug.bind(null, 'Registered:'));
 
 // Log in for the first time and receive a session token
-OPAQUE.client_authenticate(password, user_id).then(console.log.bind(null, 'Shared secret:'));
+OPAQUE.client_authenticate(password, user_id).then(console.debug.bind(null, 'Shared secret:'));
 
 // Register a new user
 let user = OPAQUE.server_register();

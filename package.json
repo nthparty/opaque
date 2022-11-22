@@ -1,9 +1,11 @@
 {
   "name": "@nthparty/opaque",
   "version": "0.3.0",
-  "description": "JavaScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
-  "main": "index.js",
+  "description": "TypeScript implementation of the OPAQUE asymmetric password authenticated key exchange (aPAKE) protocol",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "tsc -p tsconfig.prod.json && cp -r src/types dist/types",
     "test": "jest --coverage",
     "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
   },
@@ -20,6 +22,7 @@
     "aPAKE",
     "PAKE",
     "JavaScript",
+    "TypeScript",
     "cryptography",
     "cryptographic-library"
   ],
@@ -28,17 +31,17 @@
     {
       "name": "Wyatt Howe",
       "email": "wyatt@nthparty.com",
-      "url": "nthparty.com"
+      "url": "https://nthparty.com"
     },
     {
       "name": "Frederick Jansen",
       "email": "frederick@nthparty.com",
-      "url": "nthparty.com"
+      "url": "https://nthparty.com"
     },
     {
       "name": "Andrei Lapets",
       "email": "andrei@nthparty.com",
-      "url": "nthparty.com"
+      "url": "https://nthparty.com"
     }
   ],
   "license": "MIT",
@@ -47,17 +50,22 @@
   },
   "homepage": "https://github.com/nthparty/opaque#readme",
   "dependencies": {
-    "libsodium-wrappers-sumo": "^0.7.6",
-    "oprf": "^2.0.0"
+    "libsodium-wrappers-sumo": "0.7.6",
+    "oprf": "2.0.0"
   },
   "devDependencies": {
-    "coveralls": "^3.1.0",
-    "jest": "^26.2.2"
+    "@types/jest": "26.0.24",
+    "@types/libsodium-wrappers-sumo": "0.7.5",
+    "coveralls": "3.1.0",
+    "jest": "26.2.2",
+    "ts-jest": "26.5.6",
+    "typescript": "4.8.4"
   },
   "jest": {
+    "preset": "ts-jest",
     "collectCoverageFrom": [
-      "lib/*.{js,jsx}",
-      "<rootDir>/test/{!(test-io),}.js"
+      "src/lib/*.ts",
+      "<rootDir>/test/{!(test-io),}.ts"
     ]
   }
 }

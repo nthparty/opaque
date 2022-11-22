@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+		"lib": ["esnext", "dom", "DOM.Iterable"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "useDefineForClassFields": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "removeComments": false,
+    "isolatedModules": true,
+    "strict": true,
+    "allowJs": false,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    "useUnknownInCatchVariables": true,
+    "importsNotUsedAsValues": "error",
+    "skipLibCheck": true
+  }
+}

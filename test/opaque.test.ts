@@ -3,8 +3,10 @@
  *  In this test, a new user approaches the sever and registers an account.
  *  Then the connection is reset, and the user attempts to log in.
  */
-const IO = require('./test-io.js');
-const _OPAQUE = require('../index.js')(IO);
+import type { Pepper } from '../src/types/local';
+import IO from './test-io';
+import opaqueFactory from '../src/index';
+const _OPAQUE = opaqueFactory(IO);
 
 test('end-to-end working flow', done => {
   workflow(true, done)
@@ -14,7 +16,7 @@ test('end-to-end wrong pass for client authenticate flow', done => {
   workflow(false, done)
 })
 
-const workflow = async (valid, done) => {
+const workflow = async (valid: boolean, done: (err?: unknown) => void): Promise<void> => {
   const OPAQUE = await _OPAQUE;
 
   /*
@@ -25,12 +27,12 @@ const workflow = async (valid, done) => {
   const wrongPass = 'correct horse battery staples';
 
   // Sign up
-  OPAQUE.clientRegister(password, user_id).then(console.log.bind(null, 'Registered:'));
+  OPAQUE.clientRegister(password, user_id).then(console.debug.bind(null, 'Registered:'));
 
   // Log in for the first time and receive a session token
   if (valid) {
     OPAQUE.clientAuthenticate(password, user_id).then(() => {
-      valid && console.log.bind(null, 'Shared secret:');
+      valid && console.debug.bind(null, 'Shared secret:');
     });
   } else {
     OPAQUE.clientAuthenticate(wrongPass, user_id).then(() => {
@@ -43,7 +45,7 @@ const workflow = async (valid, done) => {
   /*
    *  Server
    */
-  const database = {};  // Test database to show what user data gets stored
+  const database: Record<string, Pepper> = {};  // Test database to show what user data gets stored
 
   // Register a new user
   OPAQUE.serverRegister().then(user => {
@@ -51,7 +53,7 @@ const workflow = async (valid, done) => {
 
     // Handle a login attempt
     let user_id = user.id;
-    let pepper = database[user_id];
+    let pepper = user.pepper;
     OPAQUE.serverAuthenticate(user_id, pepper).then(token => {
       try {
         valid && expect(token).not.toBeNull();
@@ -59,7 +61,7 @@ const workflow = async (valid, done) => {
       } catch (error) {
         done(error);
       }
-    }, error => {
+    }, (error: unknown) => {
       !valid && expect(error).toBeDefined();
     });
   });
