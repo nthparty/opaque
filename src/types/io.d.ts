@@ -1,18 +1,18 @@
-import type { C } from "./local";
+import type { AsymmetricKeysEncrypted } from "./local";
 
 export interface IOData {
-  sid: string;
-  pw: Uint8Array;
+  session_id: string;
+  password_digest: Uint8Array;
   registered: boolean;
   authenticated: boolean;
   client_authenticated: boolean;
   alpha: Uint8Array;
   beta: Uint8Array;
-  c: C;
-  Xu: Uint8Array;
-  Xs: Uint8Array;
-  As: Uint8Array;
-  Au: Uint8Array;
+  asymmetric_keys_enc: AsymmetricKeysEncrypted;
+  ephemeral_public_user_point: Uint8Array;
+  ephemeral_public_server_point: Uint8Array;
+  server_authentication_token: Uint8Array;
+  user_authentication_token: Uint8Array;
 }
 
 export type Tag = keyof IOData;

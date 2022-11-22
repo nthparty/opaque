@@ -16,9 +16,9 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
     const get = io.get.bind(null, op_id) as BoundGet;
     const give = io.give.bind(null, op_id) as BoundGive;
 
-    const pw = util.oprfKdf(password);
-    give("sid", user_id);
-    give("pw", pw);
+    const password_digest = util.oprfKdf(password);
+    give("session_id", user_id);
+    give("password_digest", password_digest);
 
     return await get("registered");
   };
@@ -29,22 +29,22 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
     const get = io.get.bind(null, op_id) as BoundGet;
     const give = io.give.bind(null, op_id) as BoundGive;
 
-    const sid = await get("sid");
-    const pw = await get("pw");
+    const session_id = await get("session_id");
+    const password_digest = await get("password_digest");
 
-    const ks = sodium.crypto_core_ristretto255_scalar_random();
-    const rw = util.iteratedHash(util.oprfF(ks, pw), t);
-    const ps = sodium.crypto_core_ristretto255_scalar_random();
-    const pu = sodium.crypto_core_ristretto255_scalar_random();
-    const Ps = sodium.crypto_scalarmult_ristretto255_base(ps);
-    const Pu = sodium.crypto_scalarmult_ristretto255_base(pu);
-    const c = {
-      pu: util.sodiumAeadEncrypt(rw, pu),
-      Pu: util.sodiumAeadEncrypt(rw, Pu),
-      Ps: util.sodiumAeadEncrypt(rw, Ps),
+    const server_oprf_key = sodium.crypto_core_ristretto255_scalar_random();
+    const user_symmetric_key = util.iteratedHash(util.oprfF(server_oprf_key, password_digest), t);
+    const secret_server_scalar = sodium.crypto_core_ristretto255_scalar_random();
+    const server_user_scalar = sodium.crypto_core_ristretto255_scalar_random();
+    const public_server_point = sodium.crypto_scalarmult_ristretto255_base(secret_server_scalar);
+    const public_user_point = sodium.crypto_scalarmult_ristretto255_base(server_user_scalar);
+    const asymmetric_keys_enc = {
+      secret_user_scalar_enc: util.sodiumAeadEncrypt(user_symmetric_key, server_user_scalar),
+      public_user_point_enc: util.sodiumAeadEncrypt(user_symmetric_key, public_user_point),
+      public_server_point_enc: util.sodiumAeadEncrypt(user_symmetric_key, public_server_point),
     };
 
-    const user_record = { id: sid, pepper: { ks: ks, ps: ps, Ps: Ps, Pu: Pu, c: c } };
+    const user_record = { id: session_id, pepper: { server_oprf_key, secret_server_scalar, public_server_point, public_user_point, asymmetric_keys_enc } };
     give("registered", true);
 
     return user_record;
@@ -56,18 +56,18 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
     const get = io.get.bind(null, op_id) as BoundGet;
     const give = io.give.bind(null, op_id) as BoundGive;
 
-    const r = sodium.crypto_core_ristretto255_scalar_random();
-    const xu = sodium.crypto_core_ristretto255_scalar_random();
+    const blinding_scalar = sodium.crypto_core_ristretto255_scalar_random();
+    const client_secret_key = sodium.crypto_core_ristretto255_scalar_random();
 
-    const pw = util.oprfKdf(password);
-    const _H1_x_ = util.oprfH1(pw);
+    const password_digest = util.oprfKdf(password);
+    const _H1_x_ = util.oprfH1(password_digest);
     const H1_x = _H1_x_.point;
     const mask = _H1_x_.mask;
-    const a = util.oprfRaise(H1_x, r);
+    const a = util.oprfRaise(H1_x, blinding_scalar);
 
-    const Xu = sodium.crypto_scalarmult_ristretto255_base(xu);
+    const ephemeral_public_user_point = sodium.crypto_scalarmult_ristretto255_base(client_secret_key);
     give("alpha", a);
-    give("Xu", Xu);
+    give("ephemeral_public_user_point", ephemeral_public_user_point);
 
     const b = await get("beta");
 
@@ -77,35 +77,35 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
       throw new Error("client_authenticated_1 false");
     }
 
-    const c = await get("c");
-    const r_inv = sodium.crypto_core_ristretto255_scalar_invert(r);
-    const rw = util.iteratedHash(util.oprfH(util.oprfRaise(b, r_inv), mask), t);
-    const pu = util.sodiumAeadDecrypt(rw, c.pu);
+    const asymmetric_keys_enc = await get("asymmetric_keys_enc");
+    const blinding_scalar_inv = sodium.crypto_core_ristretto255_scalar_invert(blinding_scalar);
+    const user_symmetric_key = util.iteratedHash(util.oprfH(util.oprfRaise(b, blinding_scalar_inv), mask), t);
+    const secret_user_scalar = util.sodiumAeadDecrypt(user_symmetric_key, asymmetric_keys_enc.secret_user_scalar_enc);
 
-    if (!sodium.crypto_core_ristretto255_is_valid_point(pu)) {
+    if (!sodium.crypto_core_ristretto255_is_valid_point(secret_user_scalar)) {
       console.debug("client_authenticated_2 false " + user_id);
       give("client_authenticated", false);
       throw new Error("client_authenticated_2 false");
     }
 
-    const Pu = util.sodiumAeadDecrypt(rw, c.Pu);
-    const Ps = util.sodiumAeadDecrypt(rw, c.Ps);
-    const Xs = await get("Xs");
-    const K = util.KE(pu, xu, Ps, Xs, Xu);
+    const public_user_point = util.sodiumAeadDecrypt(user_symmetric_key, asymmetric_keys_enc.public_user_point_enc);
+    const public_server_point = util.sodiumAeadDecrypt(user_symmetric_key, asymmetric_keys_enc.public_server_point_enc);
+    const ephemeral_public_server_point = await get("ephemeral_public_server_point");
+    const K = util.keyExchange(secret_user_scalar, client_secret_key, public_server_point, ephemeral_public_server_point, ephemeral_public_user_point, public_user_point);
     const SK = util.oprfF(K, util.sodiumFromByte(0));
-    const As = util.oprfF(K, util.sodiumFromByte(1));
-    const Au = util.oprfF(K, util.sodiumFromByte(2));
+    const computed_server_authentication_token = util.oprfF(K, util.sodiumFromByte(1));
+    const user_authentication_token = util.oprfF(K, util.sodiumFromByte(2));
 
-    const __As = await get("As");
+    const actual_server_authentication_token = await get("server_authentication_token");
 
-    if (sodium.compare(As, __As) !== 0) {
+    if (sodium.compare(computed_server_authentication_token, actual_server_authentication_token) !== 0) {
       // The comparable value of 0 means As equals __As
       console.debug("client_authenticated_3 false " + user_id);
       give("client_authenticated", false);
       throw new Error("client_authenticated_3 false");
     }
 
-    give("Au", Au);
+    give("user_authentication_token", user_authentication_token);
 
     const success = await get("authenticated");
     if (success) {
@@ -130,23 +130,23 @@ export = (io: IO, sodium: typeof Sodium, oprf: OPRF): Opaque => {
       give("authenticated", false);
       throw new Error("Authentication failed.  Alpha is not a group element.");
     }
-    const xs = sodium.crypto_core_ristretto255_scalar_random();
-    const b = util.oprfRaise(a, pepper.ks);
-    const Xs = sodium.crypto_scalarmult_ristretto255_base(xs);
+    const ephemeral_secret_client_scalar = sodium.crypto_core_ristretto255_scalar_random();
+    const b = util.oprfRaise(a, pepper.server_oprf_key);
+    const ephemeral_public_server_point = sodium.crypto_scalarmult_ristretto255_base(ephemeral_secret_client_scalar);
 
-    const Xu = await get("Xu");
-    const K = util.KE(pepper.ps, xs, pepper.Pu, Xu, Xs);
+    const ephemeral_public_user_point = await get("ephemeral_public_user_point");
+    const K = util.keyExchange(pepper.secret_server_scalar, ephemeral_secret_client_scalar, pepper.public_user_point, ephemeral_public_user_point, ephemeral_public_server_point, pepper.public_server_point);
     const SK = util.oprfF(K, util.sodiumFromByte(0));
-    const As = util.oprfF(K, util.sodiumFromByte(1));
-    const Au = util.oprfF(K, util.sodiumFromByte(2));
+    const server_authentication_token = util.oprfF(K, util.sodiumFromByte(1));
+    const valid_user_authentication_token = util.oprfF(K, util.sodiumFromByte(2));
 
     give("beta", b);
-    give("Xs", Xs);
-    give("c", pepper.c);
-    give("As", As);
+    give("ephemeral_public_server_point", ephemeral_public_server_point);
+    give("asymmetric_keys_enc", pepper.asymmetric_keys_enc);
+    give("server_authentication_token", server_authentication_token);
 
-    const __Au = await get("Au");
-    if (sodium.compare(Au, __Au) === 0) {
+    const user_authentication_token_from_client = await get("user_authentication_token");
+    if (sodium.compare(valid_user_authentication_token, user_authentication_token_from_client) === 0) {
       // The comparable value of 0 means equality
       give("authenticated", true);
       const token = sodium.to_hex(SK);

@@ -31,17 +31,17 @@ export interface UserRecord {
 }
 
 export interface Pepper {
-  ks: Uint8Array;
-  ps: Uint8Array;
-  Ps: Uint8Array;
-  Pu: Uint8Array;
-  c: C;
+  server_oprf_key: Uint8Array;
+  secret_server_scalar: Uint8Array;
+  public_server_point: Uint8Array;
+  public_user_point: Uint8Array;
+  asymmetric_keys_enc: AsymmetricKeysEncrypted;
 }
 
-export interface C {
-  pu: Ciphertext;
-  Pu: Ciphertext;
-  Ps: Ciphertext;
+export interface AsymmetricKeysEncrypted {
+  secret_user_scalar_enc: Ciphertext;
+  public_user_point_enc: Ciphertext;
+  public_server_point_enc: Ciphertext;
 }
 
 export interface Ciphertext {

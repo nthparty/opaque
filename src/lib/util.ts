@@ -8,7 +8,7 @@ interface Utils {
   oprfH: (x: Uint8Array, m: Uint8Array) => Uint8Array;
   oprfH1: (x: Uint8Array) => IMaskedData;
   oprfRaise: (x: Uint8Array, y: Uint8Array) => Uint8Array;
-  KE: (p: Uint8Array, x: Uint8Array, P: Uint8Array, X: Uint8Array, X1: Uint8Array) => Uint8Array;
+  keyExchange: (p: Uint8Array, x: Uint8Array, P: Uint8Array, X: Uint8Array, X1: Uint8Array, P1: Uint8Array) => Uint8Array;
   iteratedHash: (x: Uint8Array, t?: number) => Uint8Array;
   sodiumFromByte: (n: number) => Uint8Array;
   sodiumAeadEncrypt: (key: Uint8Array, plaintext: string | Uint8Array) => Ciphertext;
@@ -31,7 +31,7 @@ export = (sodium: typeof Sodium, oprf: OPRF) => {
   };
 
   const sodiumAeadDecrypt: Utils["sodiumAeadDecrypt"] = (key, ciphertext) => {
-    if (sodium.crypto_auth_hmacsha512_verify(ciphertext.mac_tag, ciphertext.body, key) === true) {
+    if (sodium.crypto_auth_hmacsha512_verify(ciphertext.mac_tag, ciphertext.body, key)) {
       try {
         return sodium.crypto_aead_chacha20poly1305_decrypt(
           null,
@@ -60,7 +60,7 @@ export = (sodium: typeof Sodium, oprf: OPRF) => {
   };
 
   const oprfF: Utils["oprfF"] = (k, x) => {
-    if (sodium.crypto_core_ristretto255_is_valid_point(x) === false || !(x instanceof Uint8Array) || sodium.is_zero(x)) {
+    if (!sodium.crypto_core_ristretto255_is_valid_point(x) || !(x instanceof Uint8Array) || sodium.is_zero(x)) {
       // The type-cast here assumes that the value always gets passed to
       // `encodeURIComponent`, which coerces `Uint8Array` objects to strings anyway:
       x = oprf.hashToPoint(x as string);
@@ -81,7 +81,8 @@ export = (sodium: typeof Sodium, oprf: OPRF) => {
     return new Uint8Array(32).fill(n);
   };
 
-  const KE: Utils["KE"] = (p, x, P, X, X1) => {
+  const keyExchange: Utils["keyExchange"] = (p, x, P, X, X1, P1) => {
+    // Note: P1 and X1 to be used in a future authentication feature.  The below (unauthenticated) key exchange suffices for now.
     const kx = oprf.scalarMult(X, x);
     const kp = oprf.scalarMult(P, p);
     const k = genericHash(sodium.crypto_core_ristretto255_add(kx, kp));
@@ -94,7 +95,7 @@ export = (sodium: typeof Sodium, oprf: OPRF) => {
     oprfH,
     oprfH1,
     oprfRaise,
-    KE,
+    keyExchange,
     iteratedHash,
     sodiumFromByte,
     sodiumAeadEncrypt,
