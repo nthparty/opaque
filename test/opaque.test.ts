@@ -9,12 +9,12 @@ import opaqueFactory from '../src/index';
 const _OPAQUE = opaqueFactory(IO);
 
 test('end-to-end working flow', done => {
-  workflow(true, done)
-})
+  workflow(true, done);
+});
 
 test('end-to-end wrong pass for client authenticate flow', done => {
-  workflow(false, done)
-})
+  workflow(false, done);
+});
 
 const workflow = async (valid: boolean, done: (err?: unknown) => void): Promise<void> => {
   const OPAQUE = await _OPAQUE;
@@ -35,8 +35,7 @@ const workflow = async (valid: boolean, done: (err?: unknown) => void): Promise<
       valid && console.debug.bind(null, 'Shared secret:');
     });
   } else {
-    OPAQUE.clientAuthenticate(wrongPass, user_id).then(() => {
-    }, () => {
+    OPAQUE.clientAuthenticate(wrongPass, user_id).then(_ => _, () => {
       !valid && done();
     });
   }
@@ -52,12 +51,12 @@ const workflow = async (valid: boolean, done: (err?: unknown) => void): Promise<
     database[user.id] = user.pepper;
 
     // Handle a login attempt
-    let user_id = user.id;
-    let pepper = user.pepper;
+    const user_id = user.id;
+    const pepper = user.pepper;
     OPAQUE.serverAuthenticate(user_id, pepper).then(token => {
       try {
         valid && expect(token).not.toBeNull();
-        done()
+        done();
       } catch (error) {
         done(error);
       }
@@ -65,4 +64,4 @@ const workflow = async (valid: boolean, done: (err?: unknown) => void): Promise<
       !valid && expect(error).toBeDefined();
     });
   });
-}
+};

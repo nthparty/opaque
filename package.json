@@ -5,9 +5,13 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsc -p tsconfig.prod.json && cp -r src/types dist/types",
+    "build": "tsc -p tsconfig.prod.json",
     "test": "jest --coverage",
-    "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info"
+    "build-and-test": "npm run-script build; npm run-script test",
+    "coveralls": "npm test && ./node_modules/coveralls/bin/coveralls.js < coverage/lcov.info",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix",
+    "lint-all": "eslint src test --fix"
   },
   "repository": {
     "type": "git",
@@ -56,7 +60,10 @@
   "devDependencies": {
     "@types/jest": "26.0.24",
     "@types/libsodium-wrappers-sumo": "0.7.5",
+    "@typescript-eslint/eslint-plugin": "^5.44.0",
+    "@typescript-eslint/parser": "^5.44.0",
     "coveralls": "3.1.0",
+    "eslint": "^8.28.0",
     "jest": "26.2.2",
     "ts-jest": "26.5.6",
     "typescript": "4.8.4"

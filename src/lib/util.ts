@@ -19,14 +19,14 @@ type IMaskedData = ReturnType<OPRF["maskPoint"]>;
 
 export = (sodium: typeof Sodium, oprf: OPRF) => {
   const sodiumAeadEncrypt: Utils["sodiumAeadEncrypt"] = (key, plaintext) => {
-    let raw_ciphertext = sodium.crypto_aead_chacha20poly1305_encrypt(
+    const raw_ciphertext = sodium.crypto_aead_chacha20poly1305_encrypt(
       plaintext,
       null,
       null,
       new Uint8Array(8),
       key
     );
-    let mac_tag = sodium.crypto_auth_hmacsha512(raw_ciphertext, key);
+    const mac_tag = sodium.crypto_auth_hmacsha512(raw_ciphertext, key);
     return { mac_tag, body: raw_ciphertext };
   };
 

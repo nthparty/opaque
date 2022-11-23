@@ -1,4 +1,4 @@
-import type { IO, IOData, IOValue, Tag } from "../src/types/io"
+import type { IO, IOData, IOValue, Tag } from "../src/types/io";
 
 /*
  *  Client-Server Communications
