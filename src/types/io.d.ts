@@ -1,4 +1,4 @@
-import type { AsymmetricKeysEncrypted } from "./local";
+import type { AsymmetricKeysEncrypted } from './local';
 
 export interface IOData {
   session_id: string;
